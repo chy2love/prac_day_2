@@ -11,18 +11,98 @@ const user = [
   { name: '김별빛나리', age: 22, birthday: '0512', phoneNumber: '01012345678' },
 ];
 
-const userList = document.querySelector('userList');
-const submitBtn = document.querySelector('submitBtn');
+const userList = document.querySelector('#userList');
+const submitBtn = document.querySelector('#submitBtn');
+const checkedList = document.querySelector('#checkedList');
+let checkedUsers = [];
+let paintedUser = [];
+let paintNewUser = [];
 
 function paintDocument(user) {
   for (let item of user) {
     const userListEl = document.createElement('li');
     const userLabel = document.createElement('label');
     const userCheckbox = document.createElement('input');
-    
+    userLabel.innerText = item.name;
+    userLabel.setAttribute('for', item.name);
+    userCheckbox.type = 'checkbox';
+    userCheckbox.id = item.name;
+    userCheckbox.className = 'indivCheckbox';
+    userList.appendChild(userListEl);
+    userListEl.appendChild(userCheckbox);
+    userListEl.appendChild(userLabel);
+    userCheckbox.addEventListener('change', handleCheckbox);
+  }
+}
+function handleCheckbox(event) {
+  if (event.target.checked) {
+    for (let item of user) {
+      if (item.name === event.target.id && !checkedUsers.includes(item)) {
+        checkedUsers.push(item);
+      }
+    }
+  } else {
+    checkedUsers = checkedUsers.filter((user) => user.name !== event.target.id);
   }
 }
 
+function paintCheckedUser(paintNewUser) {
+  for (let user of paintNewUser) {
+    const checkedListEl = document.createElement('li');
+    const checkedListBtn = document.createElement('button');
+    const checkedListSpan = document.createElement('span');
+    checkedListEl.className = user.name;
+    checkedListBtn.type = 'button';
+    checkedListBtn.innerText = 'X';
+    checkedListSpan.innerText = user.name;
+    checkedListBtn.name = user.name;
+    checkedList.appendChild(checkedListEl);
+    checkedListEl.appendChild(checkedListBtn);
+    checkedListEl.appendChild(checkedListSpan);
+    paintedUser.push(user);
+    checkedListBtn.addEventListener('click', deleteUser);
+  }
+}
+
+function handleSubmitBtn() {
+  let duplicatedUser = [];
+  for (let item of checkedUsers) {
+    if (paintedUser.includes(item)) {
+      duplicatedUser.push(item.name);
+    }
+  }
+  if (duplicatedUser.length !== 0) {
+    alert('이미 선택된 유저입니다: ' + duplicatedUser);
+  } else {
+    for (let item of checkedUsers) {
+      paintNewUser.push(item);
+    }
+    paintCheckedUser(paintNewUser);
+    const everyCheckbox = document.querySelectorAll('.indivCheckbox');
+    for (let checkbox of everyCheckbox) {
+      checkbox.checked = false;
+    }
+    paintNewUser = [];
+    checkedUsers = [];
+  }
+  console.log(paintedUser);
+}
+
+// if (doubleChecked.length !== 0) {
+//   alert('이미 선택된 유저입니다: ' + doubleChecked);
+// }
+
+function deleteUser(event) {
+  for (let item of paintedUser) {
+    if (item.name === event.target.parentElement.className) {
+      $('li').remove('.' + item.name);
+      paintedUser = paintedUser.filter((user) => user.name !== item.name);
+      console.log(paintedUser);
+    }
+  }
+}
+
+submitBtn.addEventListener('click', handleSubmitBtn);
 document.addEventListener('DOMContentLoaded', function () {
   paintDocument(user);
 });
