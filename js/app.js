@@ -46,8 +46,8 @@ function handleCheckbox(event) {
   }
 }
 
-function paintCheckedUser(paintNewUser) {
-  for (let user of paintNewUser) {
+function paintCheckedUser(paintList) {
+  for (let user of paintList) {
     const checkedListEl = document.createElement('li');
     const checkedListBtn = document.createElement('button');
     const checkedListSpan = document.createElement('span');
@@ -91,11 +91,11 @@ function handleSubmitBtn() {
 function deleteUser(event) {
   for (let item of paintedUser) {
     if (item.name === event.target.parentElement.className) {
-      $('li').remove('.' + item.name);
       paintedUser = paintedUser.filter((user) => user.name !== item.name);
-      console.log(paintedUser);
+      event.target.parentElement.remove();
     }
   }
+  console.log(paintedUser);
 }
 
 submitBtn.addEventListener('click', handleSubmitBtn);
