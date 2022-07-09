@@ -88,10 +88,6 @@ function handleSubmitBtn() {
   console.log(paintedUser);
 }
 
-// if (doubleChecked.length !== 0) {
-//   alert('이미 선택된 유저입니다: ' + doubleChecked);
-// }
-
 function deleteUser(event) {
   for (let item of paintedUser) {
     if (item.name === event.target.parentElement.className) {
